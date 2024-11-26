@@ -12,11 +12,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 全履歴を取得
 
       - name: Check for invalid file extensions
         run: |
           # Get the list of changed files in the push
-          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          if [[ -z "${{ github.event.before }}" ]]; then
+            echo "First push or rebase detected, comparing with initial commit."
+            CHANGED_FILES=$(git diff --name-only $(git rev-list --max-parents=0 HEAD) ${{ github.sha }})
+          else
+            CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          fi
 
           # Loop through the changed files and check their extensions
           for FILE in $CHANGED_FILES; do
