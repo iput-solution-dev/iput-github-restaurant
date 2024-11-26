@@ -20,6 +20,12 @@ jobs:
 
           # Loop through the changed files and check their extensions
           for FILE in $CHANGED_FILES; do
+            # Skip files in .github/workflows/
+            if [[ $FILE == .github/workflows/* ]]; then
+              continue
+            fi
+
+            # Check for valid files
             if [[ $FILE != *.me && $FILE != LICENSE ]]; then
               echo "❌ Invalid file detected: $FILE"
               exit 1
