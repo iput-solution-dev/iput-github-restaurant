@@ -17,10 +17,10 @@ jobs:
         run: |
           # Get the list of changed files in the push
           CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
-          
+
           # Loop through the changed files and check their extensions
           for FILE in $CHANGED_FILES; do
-            if [[ $FILE != *.me ]]; then
+            if [[ $FILE != *.me && $FILE != LICENSE ]]; then
               echo "❌ Invalid file detected: $FILE"
               exit 1
             fi
